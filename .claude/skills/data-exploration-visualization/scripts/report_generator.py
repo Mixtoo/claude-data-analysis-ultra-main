@@ -959,11 +959,10 @@ class ReportGenerator:
 
     def _generate_html_report(self, output_path: str) -> str:
         """生成HTML报告"""
-        # 创建Jinja2模板
-        template = Template(self.html_template)
-
-        # 添加自定义过滤器
-        template.globals['format_number'] = lambda x: f"{x:,}"
+        # 创建Jinja2环境
+        env = Environment()
+        env.filters['format_number'] = lambda x: f"{x:,}"
+        template = env.from_string(self.html_template)
 
         # 渲染模板
         html_content = template.render(**self.report_data)
@@ -976,11 +975,10 @@ class ReportGenerator:
 
     def _generate_markdown_report(self, output_path: str) -> str:
         """生成Markdown报告"""
-        # 创建Jinja2模板
-        template = Template(self.markdown_template)
-
-        # 添加自定义过滤器
-        template.globals['format_number'] = lambda x: f"{x:,}"
+        # 创建Jinja2环境
+        env = Environment()
+        env.filters['format_number'] = lambda x: f"{x:,}"
+        template = env.from_string(self.markdown_template)
 
         # 渲染模板
         markdown_content = template.render(**self.report_data)

@@ -714,10 +714,13 @@ class EDAAnalyzer:
         # 异常值扣分
         outlier_cols = quality_report['outliers']['total_outlier_columns']
         if outlier_cols > 0:
-            avg_outlier_rate = np.mean([
-                info['outlier_rate'] for info in quality_report['outliers'].values()
-            ])
-            score -= avg_outlier_rate * 0.2
+            outlier_rates = []
+            for key, value in quality_report['outliers'].items():
+                if key not in ['total_outlier_columns', 'detection_method']:
+                    outlier_rates.append(value['outlier_rate'])
+            if outlier_rates:
+                avg_outlier_rate = np.mean(outlier_rates)
+                score -= avg_outlier_rate * 0.2
 
         # 数据类型问题扣分
         type_issues = len(quality_report['data_types']['type_issues'])
